@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import Layout from "../layout/Layout";
 
 import * as userService from "../../services/user.service";
+import { capitalizeText } from "../../helpers/string.helper";
 
 const CreateUser = () => {
+  const DELAY_BEFORE_REDIRECTION = 1000;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
@@ -30,13 +32,16 @@ const CreateUser = () => {
         setEmail("");
         setCountry("");
         setCity("");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, DELAY_BEFORE_REDIRECTION);
       } else {
         toast.warn("The user could'nt be created");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, DELAY_BEFORE_REDIRECTION);
       }
     } catch (error) {
-      const fixMsg = (errMessage) =>
-        errMessage[0].toUpperCase() + errMessage.substring(1);
-
       const getErrorMessage = () => {
         const {
           response: {
@@ -48,7 +53,7 @@ const CreateUser = () => {
         /*Without nested destructuring
       const { body } = error.response.data.errors;*/
         const errMessage = body[0]?.message;
-        return fixMsg(errMessage);
+        return capitalizeText(errMessage);
       };
 
       toast.error(getErrorMessage());

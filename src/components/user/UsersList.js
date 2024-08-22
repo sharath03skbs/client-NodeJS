@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import Layout from "../layout/Layout";
 
 import * as userService from "../../services/user.service";
+import { NavLink } from "react-router-dom";
 
 const UsersList = () => {
   const [users, setUsers] = useState({});
-  const fetchusers = async() => {
+  const fetchusers = async () => {
     const response = await userService.retrieveAllUsers();
     setUsers(response);
   };
@@ -19,7 +20,7 @@ const UsersList = () => {
     <Layout>
       <h3 className="text-center mb-3">Users</h3>
       {Object.values(users).map((user) => (
-        <Row className="justify-content-center" key={user.id}>
+        <Row key={user.id} className="justify-content-center">
           <Col lg={4}>
             <Card>
               <Card.Body>
@@ -30,6 +31,22 @@ const UsersList = () => {
                     {user.city}-{user.country}
                   </p>
                 )}
+                <Button
+                className="mx-4"
+                  variant="secondary"
+                  as={NavLink}
+                  to={`/edit/${user.id}`}
+                >
+                  Edit User
+                </Button>
+                <Button
+                  className="mx-4"
+                  variant="danger"
+                  as={NavLink}
+                  to={`/delete/${user.id}`}
+                >
+                  Remove User
+                </Button>
               </Card.Body>
             </Card>
           </Col>

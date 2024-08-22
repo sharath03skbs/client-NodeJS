@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UsersList from "./components/user/UsersList";
 import CreateUser from "./components/user/CreateUser";
 import RetrieveUser from "./components/user/RetrieveUser";
+import EditUser from "./components/user/EditUser";
+import RemoveUser from "./components/user/RemoveUser";
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<UsersList />} />
           <Route path="/create" element={<CreateUser />} />
-          <Route path="/user/:userId" element={<RetrieveUser />} />
+          <Route path="/get/:userId" element={<RetrieveUser />} />
+          <Route path="/edit/:userId" element={<EditUser />} />
+          <Route path="/delete/:userId" element={<RemoveUser />} />
           <Route />
         </Routes>
       </Router>

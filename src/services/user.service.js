@@ -1,9 +1,21 @@
 import axios from "axios";
 
-const baseApiUrl = "http://localhost:4000";
+const baseApiUrl = "http://localhost:4000/v1";
+
+export const retrieveUser = async (userId) => {
+  const retrieveUsersEndpoint = `${baseApiUrl}/user/get/${userId}`;
+  const { data: apiResponse } = await axios.get(retrieveUsersEndpoint);
+  return apiResponse;
+};
+
+export const retrieveAllUsers = async () => {
+  const getAllUsersEndpoint = `${baseApiUrl}/user/all`;
+  const { data: apiResponse } = await axios.get(getAllUsersEndpoint);
+  return apiResponse;
+};
 
 export const createUser = async (payload) => {
-  const createUserEndpoint = `${baseApiUrl}/v1/user/add`;
+  const createUserEndpoint = `${baseApiUrl}/user/add`;
   const { data: apiResponse } = await axios.post(
     `${createUserEndpoint}`,
     payload
@@ -11,14 +23,14 @@ export const createUser = async (payload) => {
   return apiResponse;
 };
 
-export const retrieveUser = async (userId) => {
-  const retrieveUsersEndpoint = `${baseApiUrl}/v1/user/get/${userId}`;
-  const { data: apiResponse } = await axios.get(`${retrieveUsersEndpoint}`);
+export const editUser = async (userId, payload) => {
+  const editUserEndpoint = `${baseApiUrl}/v1/user/update/${userId}`;
+  const { data: apiResponse } = await axios.put(editUserEndpoint, payload);
   return apiResponse;
 };
 
-export const retrieveAllUsers = async () => {
-  const getAllUsersEndpoint = `${baseApiUrl}/v1/user/all`;
-  const { data: apiResponse } = await axios.get(`${getAllUsersEndpoint}`);
+export const removeUser = async (userId) => {
+  const removeUserEndpoint = `${baseApiUrl}/user/delete/${userId}`;
+  const { data: apiResponse } = await axios.delete(removeUserEndpoint);
   return apiResponse;
 };
