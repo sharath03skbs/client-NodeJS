@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../layout/Layout";
+import Layout from "../../components/layout/Layout";
 import { Button, Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 

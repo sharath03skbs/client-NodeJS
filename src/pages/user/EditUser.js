@@ -1,20 +1,38 @@
-import React, { useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { toast } from "react-toastify";
-import Layout from "../layout/Layout";
-
+import React, { useEffect, useState } from "react";
 import * as userService from "../../services/user.service";
+import { NavLink, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Layout from "../../components/layout/Layout";
+import { Button, Form, Col, Row } from "react-bootstrap";
 import { capitalizeText } from "../../helpers/string.helper";
 
-const CreateUser = () => {
+const EditUser = () => {
+  const { userId } = useParams();
   const DELAY_BEFORE_REDIRECTION = 1000;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
 
+  const preFillFields = async () => {
+    try {
+      const user = await userService.retrieveUser(userId);
+      setName(user.name);
+      setEmail(user.email);
+      setCity(user.city);
+      setCountry(user.country);
+    } catch (error) {
+      console.error(error.message);
+      toast.error(`User ${userId} could'nt be found`);
+      window.location.href = "/";
+    }
+  };
+  useEffect(() => {
+    preFillFields();
+  }, [userId]);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const DELAY_BEFORE_REDIRECTION = 1500;
     const payload = {
       name,
       email,
@@ -22,46 +40,35 @@ const CreateUser = () => {
       city,
     };
     try {
-      const response = await userService.createUser(payload);
-      //Optional Chaining
+      const response = await userService.editUser(userId, payload);
       if (response?.status) {
-        const getUserId = () => response?.user?.id;
-        toast.success(`User ${getUserId()} successfully created!`);
-        //Clear States
-        setName("");
-        setEmail("");
-        setCountry("");
-        setCity("");
+        const userName = response.user.name;
+        toast.success(`User ${userName} details updated successfully`);
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = `/get/${userId}`;
         }, DELAY_BEFORE_REDIRECTION);
       } else {
-        toast.warn("The user could'nt be created");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, DELAY_BEFORE_REDIRECTION);
+        toast.warn("The user could'nt be updated");
       }
     } catch (error) {
       const getErrorMessage = () => {
         const {
-          response: {
-            data: {
-              errors: { body },
-            },
+          data: {
+            errors: { body },
           },
-        } = error;
-        /*Without nested destructuring
-      const { body } = error.response.data.errors;*/
-        const errMessage = body[0]?.message;
+        } = error.response;
+        const errMessage = body[0].message;
         return capitalizeText(errMessage);
       };
-
       toast.error(getErrorMessage());
+      setTimeout(() => {
+        window.location.href = "/";
+      }, DELAY_BEFORE_REDIRECTION);
     }
   };
-
   return (
     <Layout>
+      <h3 className="text-center">Edit User</h3>
       <Row className="justify-content-center">
         <Col lg={6}>
           <Form>
@@ -69,6 +76,7 @@ const CreateUser = () => {
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
+                value={name}
                 placeholder="Enter name"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -77,6 +85,7 @@ const CreateUser = () => {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
+                value={email}
                 placeholder="Enter email"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -85,6 +94,7 @@ const CreateUser = () => {
               <Form.Label>Country</Form.Label>
               <Form.Control
                 type="text"
+                value={country}
                 placeholder="Enter country"
                 onChange={(e) => setCountry(e.target.value)}
               />
@@ -93,12 +103,21 @@ const CreateUser = () => {
               <Form.Label>City</Form.Label>
               <Form.Control
                 type="text"
+                value={city}
                 placeholder="Enter city"
                 onChange={(e) => setCity(e.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit" onClick={handleSubmit}>
-              Add User
+            <Button className="m-1" variant="primary" onClick={handleSubmit}>
+              Update User
+            </Button>
+            <Button
+              className="m-1"
+              variant="danger"
+              as={NavLink}
+              to={`/delete/${userId}`}
+            >
+              Remove User
             </Button>
           </Form>
         </Col>
@@ -107,4 +126,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default EditUser;

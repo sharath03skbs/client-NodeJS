@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
 import { createGlobalStyle } from "styled-components";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   // const BlueText = styled.div`
@@ -22,8 +23,9 @@ const Layout = ({ children }) => {
         <BackgroundColor light />
         <ToastContainer />
         <NavBar />
-        <Container className="mt-5 mb-5">{children}</Container>
+        <Container className="mt-1 ">{children}</Container>
       </Container>
+      <Footer />
     </>
   );
 };

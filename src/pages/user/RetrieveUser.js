@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import Layout from "../layout/Layout";
+import Layout from "../../components/layout/Layout";
 
 import * as userService from "../../services/user.service";
 

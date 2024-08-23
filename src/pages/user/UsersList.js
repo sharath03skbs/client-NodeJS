@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import Layout from "../layout/Layout";
+import Layout from "../../components/layout/Layout";
 
 import * as userService from "../../services/user.service";
 import { NavLink } from "react-router-dom";
@@ -32,7 +32,7 @@ const UsersList = () => {
                   </p>
                 )}
                 <Button
-                className="mx-4"
+                  className="mx-4"
                   variant="secondary"
                   as={NavLink}
                   to={`/edit/${user.id}`}

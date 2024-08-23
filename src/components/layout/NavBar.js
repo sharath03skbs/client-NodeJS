@@ -11,12 +11,12 @@ const NavBar = () => {
         </Navbar.Brand>
         <Nav className="flex-grow-1 justify-content-end">
           <Nav.Link
+            as={NavLink}
             to="/create"
             className="badge bg-light text-dark d-flex align-items-center p-2"
           >
             Create User
           </Nav.Link>
-          <Nav.Link to="/edit">Pricing</Nav.Link>
         </Nav>
       </Container>
     </Navbar>
