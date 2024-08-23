@@ -4,12 +4,15 @@ const baseApiUrl = "http://localhost:4000/v1";
 
 export const retrieveUser = async (userId) => {
   const retrieveUsersEndpoint = `${baseApiUrl}/user/get/${userId}`;
+  //Setting the app to sleep for 1 second
+  await new Promise((r) => setTimeout(r, 1000));
   const { data: apiResponse } = await axios.get(retrieveUsersEndpoint);
   return apiResponse;
 };
 
 export const retrieveAllUsers = async () => {
   const getAllUsersEndpoint = `${baseApiUrl}/user/all`;
+  await new Promise((r) => setTimeout(r, 1000));
   const { data: apiResponse } = await axios.get(getAllUsersEndpoint);
   return apiResponse;
 };
@@ -21,6 +24,10 @@ export const createUser = async (payload) => {
     payload
   );
   return apiResponse;
+  /**Using Fetch API 
+   * const rawResponse = await fetch(createUsersEndpoint,{method : "POST" , headers:{"Content-Type" : "application/json"},body : JSON.stringify(payload)});
+  return rawResponse.json();
+  */
 };
 
 export const editUser = async (userId, payload) => {

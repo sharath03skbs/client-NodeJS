@@ -4,20 +4,20 @@ import { NavLink, Nav } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <Container className="fixed-bottom p-2 mt-2 mb-2 border border-dark">
+    <Container className="fixed-bottom p-1 mt-2 mb-2 border border-dark text-white bg-dark">
       <Row className="justify-content-center">
         <Col md={{ span: 3, offset: 1 }}>
-          <NavLink to="/contact">
+          <NavLink to="/contact" className=" text-reset ">
             <h4>Contact</h4>
           </NavLink>
         </Col>
         <Col md={{ span: 3, offset: 1 }}>
-          <NavLink to="/create">
+          <NavLink to="/create" className=" text-reset ">
             <h4>Create User</h4>
           </NavLink>
         </Col>
         <Col md={{ span: 3, offset: 1 }}>
-          <NavLink to="/about">
+          <NavLink to="/about" className=" text-reset ">
             <h4>About Us</h4>
           </NavLink>
         </Col>

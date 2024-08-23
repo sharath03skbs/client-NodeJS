@@ -1,15 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
-import Layout from "../../components/layout/Layout";
+import { Col, Row } from "react-bootstrap";
+import { List } from "react-content-loader";
+import { toast } from "react-toastify";
 
+import Layout from "../../components/layout/Layout";
 import * as userService from "../../services/user.service";
-import { NavLink } from "react-router-dom";
+import UserCard from "../../components/user/UserCard";
 
 const UsersList = () => {
   const [users, setUsers] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchusers = async () => {
-    const response = await userService.retrieveAllUsers();
-    setUsers(response);
+    try {
+      setIsLoading(true);
+      const response = await userService.retrieveAllUsers();
+      setUsers(response);
+    } catch (error) {
+      const retrieveErrorMessage = () => {
+        const errMessage = error?.response?.data?.message;
+        //Coalescing Operator : The first operand is evaluated , If it is not null then the second operator is evaluated
+        return errMessage ?? "Error connecting to the Server";
+      };
+      //We are not destructring the message because there wont be any message if the API is down and hence we are using optional chaining
+      setErrorMessage(retrieveErrorMessage());
+      toast.warn(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -18,40 +37,27 @@ const UsersList = () => {
 
   return (
     <Layout>
-      <h3 className="text-center mb-3">Users</h3>
-      {Object.values(users).map((user) => (
-        <Row key={user.id} className="justify-content-center">
-          <Col lg={4}>
-            <Card>
-              <Card.Body>
-                <h4>{user.name}</h4>
-                <p>{user.email}</p>
-                {user.city && user.country && (
-                  <p>
-                    {user.city}-{user.country}
-                  </p>
-                )}
-                <Button
-                  className="mx-4"
-                  variant="secondary"
-                  as={NavLink}
-                  to={`/edit/${user.id}`}
-                >
-                  Edit User
-                </Button>
-                <Button
-                  className="mx-4"
-                  variant="danger"
-                  as={NavLink}
-                  to={`/delete/${user.id}`}
-                >
-                  Remove User
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      ))}
+      {errorMessage ? (
+        <p className="h4 text-center text-danger fw-bold mt-5">
+          {errorMessage}
+        </p>
+      ) : (
+        <>
+          <h3 className="text-center mb-3">Users</h3>
+          {isLoading && (
+            <div className="text-center mt-5">
+              <List />
+            </div>
+          )}
+          <Row className="justify-content-center">
+            {Object.values(users).map((user) => (
+              <Col key={user.id} lg={4}>
+                <UserCard user={user} />
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
     </Layout>
   );
 };
